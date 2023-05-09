@@ -11,7 +11,9 @@ client/coverage
 client/build
 
 # misc
-client/upload
+client/upload/events/
+client/upload/posts/
+client/upload/profiles/
 .DS_Store
 .env.local
 .env.development.local
