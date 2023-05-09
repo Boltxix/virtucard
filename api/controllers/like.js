@@ -41,9 +41,7 @@ export const deleteLike = (req, res) => {
 
         const q = "DELETE FROM likes WHERE `uid` = ? AND `pid`= ?"
 
-        
-
-        db.query(q, [userInfo.id, req.params.postId], (err, data) => {
+        db.query(q, [userInfo.id, req.query.postId], (err, data) => {
             if (err) return res.status(500).json(err)
 
             return res.json("Post has been unliked")

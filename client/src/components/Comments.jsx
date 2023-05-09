@@ -1,44 +1,39 @@
-import {  useEffect, useState } from "react";
-import axios from "axios";
+import {  useState } from "react";
 import moment from "moment";
 import { useContext } from "react";
 import { AuthContext } from '../context/authContext'
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { makeRequest } from "../axios";
+import defProfileImg from '../img/profile.png'
 
 
 const Comments = ({postId}) => {
 
-  const [comments, setComments] = useState([]);
   const [desc, setDesc] = useState("");
   const { currentUser } = useContext(AuthContext);
 
+const {isLoading, error, data} = useQuery(["comments"], () =>
+makeRequest.get("/comments?postId="+ postId).then((res)=>{
+  return res.data
+}))
 
+const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(`/comments?postId=`+postId);
-        setComments(res.data);
-        console.log(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, [postId]);
-
+const mutation = useMutation(
+  (newComment) => {
+    return makeRequest.post("/comments", newComment)
+  },
+  {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"])
+    },
+  }
+)
 
   const handleClick = async e => {
-    e.preventDefault()
-    try {
-         await axios.post(`/comments`,{
-            desc,
-            postId,
-        })
-        
-    } catch (err) {
-      console.log(err)
-    }
-    setDesc("")
+    e.preventDefault();
+    mutation.mutate({ desc, postId });
+    setDesc("");
 }
 
 
@@ -46,15 +41,19 @@ const Comments = ({postId}) => {
   return (
     <div className="comments">
       <div className="write">
-        <img className="userImg" src={`../upload/profiles/${currentUser.img}`} alt="" />
+        <img className="userImg" src={currentUser.img ? `../upload/profiles/${currentUser.img}` : defProfileImg} alt="" />
         <input type="text" placeholder="write a comment" value={desc} onChange={e=>setDesc(e.target.value)} />
         <button onClick={handleClick}>Send</button>
       </div>
-      {comments.map((comment) => (
+      {error
+        ? "Something went wrong"
+        : isLoading
+        ? "loading"
+        : data.map((comment) => (
         <div className="comment">
-          <img src={`../upload/profiles/${comment.img}`} alt="" />
+          <img src={comment.img ? `../upload/profiles/${comment.img}` : defProfileImg} alt="" />
           <div className="info">
-            <span>{comment.name}</span>
+            <span>{comment.username}</span>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>
