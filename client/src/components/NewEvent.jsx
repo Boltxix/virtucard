@@ -25,7 +25,7 @@ const NewEvent = ({ setOpenUpdate }) => {
             setError('Please enter an event name')
             isValid = false
         } else {
-            const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:d{2}$/
+            const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
             if (!dateRegex.test(date)) {
                 setError('Please enter a valid date')
                 isValid = false
@@ -39,7 +39,7 @@ const NewEvent = ({ setOpenUpdate }) => {
             setError('Please select an event card image')
             isValid = false
         } else {
-            const allowedTypes = ['imgae/jpeg', 'image/png']
+            const allowedTypes = ['image/jpeg', 'image/png']
             if (!allowedTypes.includes(file.type)) {
                 setError('Please select a valid image file (JPEG or PNG)')
                 isValid = false
@@ -108,9 +108,9 @@ const NewEvent = ({ setOpenUpdate }) => {
                         <ReactQuill className='editor' theme='snow' value={value} onChange={setValue} />
                     </div>
                     {err && <p><b>{err}</b></p>}
-                    <button className='create' onClick type='submit '>Create Event</button>
+                    <button className='create' type='submit' onClick={handleSubmit}>Create Event</button>
                 </form>
-                <button className='close' onClick={() => {
+                <button className='close' type='submit' onClick={() => {
                     setOpenUpdate(false)
                     window.location.reload();
                 }}>Close</button>
