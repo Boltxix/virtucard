@@ -11,10 +11,48 @@ const NewEvent = ({ setOpenUpdate }) => {
     const [file, setFile] = useState(null)
     const [date, setDate] = useState(state?.date || '')
     const [location, setLocation] = useState(state?.location || '')
-
     const [err, setError] = useState(null)
 
     const navigate = useNavigate()
+
+    const validateInputs = () => {
+        let isValid = true
+        if (!name.trim()) {
+            setError('Please enter an event name')
+            isValid = false
+        }
+        if (!date) {
+            setError('Please enter an event name')
+            isValid = false
+        } else {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:d{2}$/
+            if (!dateRegex.test(date)) {
+                setError('Please enter a valid date')
+                isValid = false
+            }
+        }
+        if (!location.trim()) {
+            setError('Please enter a location')
+            isValid = false
+        }
+        if (!file) {
+            setError('Please select an event card image')
+            isValid = false
+        } else {
+            const allowedTypes = ['imgae/jpeg', 'image/png']
+            if (!allowedTypes.includes(file.type)) {
+                setError('Please select a valid image file (JPEG or PNG)')
+                isValid = false
+            }
+            const maxSize = 5 * 1024 * 1024 //5MB
+            if (file.size > maxSize) {
+                setError('Please select an image file smaller than 5MB')
+                isValid = false
+            }
+        }
+
+        return isValid
+    }
 
     const upload = async () => {
         try {
@@ -29,6 +67,11 @@ const NewEvent = ({ setOpenUpdate }) => {
 
     const handleSubmit = async e => {
         e.preventDefault()
+
+        if(!validateInputs()){
+            return
+        }
+
         const imgUrl = await upload()
 
         try {
