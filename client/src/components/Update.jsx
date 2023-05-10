@@ -18,13 +18,13 @@ const Update = ({ setOpenUpdate, user }) => {
       return null;
     } else {
       return URL.createObjectURL(newImg);
-      
+
     }
   }
-  
+
   const { currentUser } = useContext(AuthContext);
   const { setCurrentUser } = useContext(AuthContext)
- 
+
 
   const upload = async () => {
     try {
@@ -44,7 +44,7 @@ const Update = ({ setOpenUpdate, user }) => {
       setMessage("File name should not contain spaces");
       return;
     }
-  
+
     let imgUrl = "";
     if (file) {
       imgUrl = await upload();
@@ -53,14 +53,14 @@ const Update = ({ setOpenUpdate, user }) => {
         return;
       }
     }
-  
+
     try {
       const response = await axios.put(`/user/${currentUser.id}`, {
         username,
         email,
         img: file ? imgUrl : ""
       });
-  
+
       setMessage(response.data);
       setCurrentUser({
         ...user,
@@ -83,7 +83,7 @@ const Update = ({ setOpenUpdate, user }) => {
             <label htmlFor="file">
               <span>Profile Picture</span>
               <div className="imgContainer">
-              <img src={urlImg(newImg) ? urlImg(newImg) : (user.img ? `/upload/profiles/${user.img}` : defProfileImg)} alt="" />
+                <img src={urlImg(newImg) ? urlImg(newImg) : (user.img ? `/upload/profiles/${user.img}` : defProfileImg)} alt="" />
                 <CloudUploadIcon className='icon' />
               </div>
             </label>
@@ -91,7 +91,8 @@ const Update = ({ setOpenUpdate, user }) => {
               type='file'
               id="file"
               style={{ display: "none" }}
-              onChange={e => {setFile(e.target.files[0]);
+              onChange={e => {
+                setFile(e.target.files[0]);
                 setNewImg(e.target.files[0]);
               }}
             />
@@ -115,13 +116,13 @@ const Update = ({ setOpenUpdate, user }) => {
           <p>{message}</p>
           <button type='submit'>Update</button>
         </form>
-      </div>
+        <button className='close' onClick={() => {
+          setOpenUpdate(false);
+          window.location.reload();
+        }}>Close</button>
+      </div >
+    </div>
 
-      <button className='close' onClick={() => {
-        setOpenUpdate(false);
-        window.location.reload();
-      }}>Close</button>
-    </div >
   )
 }
 

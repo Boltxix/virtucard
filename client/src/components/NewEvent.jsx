@@ -71,7 +71,7 @@ const NewEvent = ({ setOpenUpdate }) => {
         if(!validateInputs()){
             return
         }
-        
+
         const imgUrl = await upload()
 
         try {
@@ -94,26 +94,27 @@ const NewEvent = ({ setOpenUpdate }) => {
             <div className="wrapper">
                 <form onSubmit={handleSubmit}>
                     <h1>New Event</h1>
-                    <label>Event Name</label>
+                    <label>Event Name :</label>
                     <input type="text" value={name} onChange={e => setName(e.target.value)} />
-                    <label>Event Card</label>
+                    <label>Event Card :</label>
                     <input type="file" id='file' onChange={e => { setFile(e.target.files[0]) }} />
 
-                    <label>Date and Time of Event</label>
+                    <label>Date and Time of Event : </label>
                     <input type="datetime-local" value={date} onChange={e => setDate(e.target.value)} />
-                    <label>Location of Event</label>
+                    <label>Location of Event : </label>
                     <input type="text" value={location} onChange={e => setLocation(e.target.value)} />
-                    <label>Description of Event</label>
+                    <label>Description of Event : </label>
                     <div className="editorContainer">
                         <ReactQuill className='editor' theme='snow' value={value} onChange={setValue} />
                     </div>
                     {err && <p><b>{err}</b></p>}
-                    <button type='submit'>Update</button>
+                    <button className='create' onClick type='submit '>Create Event</button>
                 </form>
+                <button className='close' onClick={() => {
+                    setOpenUpdate(false)
+                    window.location.reload();
+                }}>Close</button>
             </div>
-            <button className='close' onClick={() => {
-                setOpenUpdate(false)
-            }}>X</button>
         </div>
 
     )
