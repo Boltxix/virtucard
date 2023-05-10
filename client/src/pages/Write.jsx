@@ -11,12 +11,27 @@ const Write = () => {
   const state = useLocation().state
   const [value, setValue] = useState(state?.desc || '');
   const [title, setTitle] = useState(state?.title || '');
-  const [file, setFile] = useState('null');
+  const [file, setFile] = useState(null);
   const [cat, setCat] = useState(state?.cat || '');
-
   const [err, setError] = useState(null)
-
   const navigate = useNavigate()
+
+  const validateInputs = () => {
+    if (!title) {
+      setError("Please enter a title")
+      return false
+    }
+
+    if(!value){
+      setError("Please enter some content")
+      return false
+    }
+    if(!cat){
+      setError("Please slect a category")
+      return false
+    }
+    return true
+  }
 
   const upload = async () => {
     try {
@@ -31,6 +46,11 @@ const Write = () => {
 
   const handleClick = async e => {
     e.preventDefault()
+
+    if(!validateInputs()){
+      return
+    }
+
     const imgUrl = await upload()
 
     try {
