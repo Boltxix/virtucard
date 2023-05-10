@@ -10,23 +10,47 @@ const Register = () => {
     password: "",
 
   })
-  const [err, setError] = useState(null)
+  const [errors, setErrors] = useState({})
 
   const navigate = useNavigate()
 
 
   const handleChange = e => {
     setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    setErrors(prev => ({ ...prev, [e.target.name]: "" }))
   }
 
   const handleSubmit = async e => {
     e.preventDefault()
-    try {
-      await axios.post("/auth/register", inputs)
-      navigate("/login")
-    } catch (err) {
-      setError(err.response.data)
+    const validationErrors = validate(inputs)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+    } else {
+      try {
+        await axios.post("/auth/register", inputs)
+        navigate("/login")
+      } catch (err) {
+        setErrors({ server: err.response.data })
+      }
     }
+  }
+
+  const validate = (values) => {
+    let errors = {}
+    if(!values.username){
+      errors.username = "Username is required"
+    }
+    if(!values.email){
+      errors.email = "Email is required"
+    } else if (!/\S+@\S+\.\S+/.test(values.email)){
+      errors.email = "Email is invalid"
+    }
+    if(!values.password){
+      errors.password = "Password is required"
+    }else if (values.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long"
+    }
+    return errors
   }
 
   return (
@@ -35,9 +59,7 @@ const Register = () => {
         <div className="left">
           <h1>VirtuCard</h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
-            alias totam numquam ipsa exercitationem dignissimos, error nam,
-            consequatur.
+          Welcome to VirtuCard, the online celebration card platform. Please fill out the form  to create your account and start storing your digital celebration card.
           </p>
           <span>Do you have an account?</span>
           <Link to="/login">
@@ -48,9 +70,12 @@ const Register = () => {
           <h1>Register</h1>
           <form>
             <input required type="text" placeholder='username' name="username" onChange={handleChange} />
+            {errors.username && <p>{errors.username}</p>}
             <input required type="email" placeholder='email' name="email" onChange={handleChange} />
+            {errors.email && <p>{errors.email}</p>}
             <input required type="password" placeholder='password' name="password" onChange={handleChange} />
-            {err && <p>{err}</p>}
+            {errors.password && <p>{errors.password}</p>}
+            {errors.server && <p>{errors.server}</p>}
             <button onClick={handleSubmit}>Register</button>
           </form>
 
