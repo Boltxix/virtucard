@@ -12,6 +12,8 @@ const Update = ({ setOpenUpdate, user }) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [newImg, setNewImg] = useState(null)
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   function urlImg(newImg) {
     if (!newImg) {
@@ -24,6 +26,29 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const { currentUser } = useContext(AuthContext);
   const { setCurrentUser } = useContext(AuthContext)
+
+  const validateInputs = () => {
+    let isValid = true;
+
+    if (!username) {
+      setUsernameError("Username is required");
+      isValid = false;
+    } else {
+      setUsernameError("");
+    }
+
+    if (!email) {
+      setEmailError("Email is required");
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Invalid email format");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    return isValid;
+  };
 
 
   const upload = async () => {
@@ -40,6 +65,11 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateInputs()) {
+      return;
+    }
+
     if (file && file.name && file.name.includes(" ")) {
       setMessage("File name should not contain spaces");
       return;
@@ -70,7 +100,7 @@ const Update = ({ setOpenUpdate, user }) => {
       });
     } catch (err) {
       console.log(err);
-      setMessage("Error updating user");
+      setMessage(err.response.data);
     }
   };
 
@@ -105,6 +135,7 @@ const Update = ({ setOpenUpdate, user }) => {
             required
             onChange={(e) => setUsername(e.target.value)}
           />
+          {usernameError && <p className="error">{usernameError}</p>}
           <label>Email</label>
           <input
             type="email"
@@ -113,6 +144,7 @@ const Update = ({ setOpenUpdate, user }) => {
             required
             onChange={(e) => setEmail(e.target.value)}
           />
+          {emailError && <p className="error">{emailError}</p>}
           <p>{message}</p>
           <button type='submit'>Update</button>
         </form>

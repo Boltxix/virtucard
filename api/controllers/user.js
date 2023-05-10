@@ -17,6 +17,7 @@ export const getUser = (req, res) => {
 
 
 export const updateUser = (req, res) => {
+
   const userId = req.params.id;
   const { username, email, img } = req.body;
 
@@ -26,19 +27,26 @@ export const updateUser = (req, res) => {
   jwt.verify(token, "secretekey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!")
 
-    // Query the database to update the user with the given ID
-    db.query('UPDATE users SET username = ?, email = ?, img = ? WHERE id = ?', [username, email, img, userId, userInfo.id], (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error updating user');
-      } else {
-        console.log(result)
-        res.status(200).send('User updated successfully');
-      }
-    });
+    const q = "SELECT * FROM users WHERE email = ? OR username = ?"
 
+    db.query(q, [email, username], (err, data) => {
+      if (err) return res.json(err)
+      if (data.length > 0) return res.status(409).json("User already exists!")
+
+      console.log(username,email)
+
+      // Query the database to update the user with the given ID
+      db.query('UPDATE users SET username = ?, email = ?, img = ? WHERE id = ?', [username, email, img, userId, userInfo.id], (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Error updating user');
+        } else {
+          console.log(result)
+          res.status(200).send('User updated successfully');
+        }
+      });
+    })
   })
-
 }
 
 export const deleteUser = (req, res) => {
