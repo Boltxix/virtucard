@@ -58,7 +58,7 @@ const handleDelete = async (eventId) => {
                         </div>
                         <div className="content">
                             <h1>{event.name}</h1>
-                            <p>{event.date}</p>
+                            <p>{new Date(event.date).toLocaleString()}</p>
                             <p>{event.location}</p>
                             <Link className="link" to={`/events/${event.id}`}>
                                    

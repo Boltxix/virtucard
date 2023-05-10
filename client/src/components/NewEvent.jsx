@@ -18,9 +18,9 @@ const NewEvent = ({ setOpenUpdate }) => {
 
     const upload = async () => {
         try {
-            const formData = new FormData ();
+            const formData = new FormData();
             formData.append("file", file)
-            const res = await axios.post ("/eventUpload", formData)
+            const res = await axios.post("/eventUpload", formData)
             return res.data
         } catch (err) {
             setError(err.response?.data?.message || "An unknown error occurred, Please make sure the image has been uploaded")
@@ -32,7 +32,7 @@ const NewEvent = ({ setOpenUpdate }) => {
         const imgUrl = await upload()
 
         try {
-             await axios.post(`/events/`,{
+            await axios.post(`/events/`, {
                 name,
                 img: file ? imgUrl : "",
                 date: date,
@@ -40,9 +40,9 @@ const NewEvent = ({ setOpenUpdate }) => {
                 description: value
             })
             navigate('/events/')
-            
+
         } catch (err) {
-                  setError(err.response?.data?.message || "An unknown error occurred, Please make sure the image has been uploaded")
+            setError(err.response?.data?.message || "An unknown error occurred, Please make sure the image has been uploaded")
         }
     }
 
@@ -51,26 +51,27 @@ const NewEvent = ({ setOpenUpdate }) => {
             <div className="wrapper">
                 <form onSubmit={handleSubmit}>
                     <h1>New Event</h1>
-                    <label>Event Name</label>
+                    <label>Event Name :</label>
                     <input type="text" value={name} onChange={e => setName(e.target.value)} />
-                    <label>Event Card</label>
-                    <input type="file" id='file' onChange={e=> {setFile(e.target.files[0])}} />
-                    
-                    <label>Date and Time of Event</label>
-                    <input type="datetime-local" value={date} onChange={e => setDate(e.target.value)}  />
-                    <label>Location of Event</label>
+                    <label>Event Card :</label>
+                    <input type="file" id='file' onChange={e => { setFile(e.target.files[0]) }} />
+
+                    <label>Date and Time of Event : </label>
+                    <input type="datetime-local" value={date} onChange={e => setDate(e.target.value)} />
+                    <label>Location of Event : </label>
                     <input type="text" value={location} onChange={e => setLocation(e.target.value)} />
-                    <label>Description of Event</label>
+                    <label>Description of Event : </label>
                     <div className="editorContainer">
                         <ReactQuill className='editor' theme='snow' value={value} onChange={setValue} />
                     </div>
                     {err && <p><b>{err}</b></p>}
-                    <button type='submit'>Update</button>
+                    <button className='create' onClick type='submit '>Create Event</button>
                 </form>
-            </div>
                 <button className='close' onClick={() => {
                     setOpenUpdate(false)
-                }}>X</button>
+                    window.location.reload();
+                }}>Close</button>
+            </div>
         </div>
 
     )
