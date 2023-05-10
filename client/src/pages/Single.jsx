@@ -54,7 +54,7 @@ const Single = () => {
     }
   }
 
-  const { isLoading, error, data } = useQuery(["likes", postId], () =>
+  const { isLoading, data } = useQuery(["likes", postId], () =>
     makeRequest.get("/likes?postId=" + postId).then((res) => {
       return res.data
     }))
