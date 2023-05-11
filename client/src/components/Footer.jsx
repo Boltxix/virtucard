@@ -7,7 +7,7 @@ const Footer = () => {
       <img src={Logo} alt="" />
       <div className="social-media">
 
-        <a href="https://github.com/Boltxix">Github</a>
+        <a href="https://github.com/Boltxix/virtucard">Github</a>
         <a href="https://www.linkedin.com/in/maciej-sobiecki-3a3402176/">LinkedIn</a>
       </div>
       <p>&copy; 2023 VirtuCard. All Rights Reserved.</p>
