@@ -33,7 +33,7 @@ const Single = () => {
   const { currentUser } = useContext(AuthContext);
 
 
- 
+
 
   // Fetch the post data from the server when the page mounts
   useEffect(() => {
@@ -51,11 +51,15 @@ const Single = () => {
 
   // Handle the delete button click event
   const handleDelete = async () => {
-    try {
-      await axios.delete(`/posts/${postId}`);
-      navigate("/")
-    } catch (err) {
-      console.log(err);
+    const confirmed = window.confirm('Are you sure you want to delete?');
+    if (confirmed) {
+      // Perform the delete operation
+      try {
+        await axios.delete(`/posts/${postId}`);
+        navigate("/")
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -67,7 +71,7 @@ const Single = () => {
 
   // Get the query client object from React Query
   const QueryClient = useQueryClient()
-  
+
   // Define a mutation function to handle like/unlike events
   const mutation = useMutation(
     (liked) => {
@@ -80,12 +84,12 @@ const Single = () => {
         QueryClient.invalidateQueries(["likes"])
       }
     }
-    )
-    
-    if (!currentUser) { // if there is no current user, show an error message
-      return <div className='error'>Please login to view more details about the post!</div>;
+  )
+
+  if (!currentUser) { // if there is no current user, show an error message
+    return <div className='error'>Please login to view more details about the post!</div>;
   }
-    // Render a loading message if the likes data is still being fetched
+  // Render a loading message if the likes data is still being fetched
   if (isLoading) {
     return <div>Loading...</div>
 
