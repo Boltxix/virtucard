@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import axios from "axios"
 import { useNavigate, useLocation } from 'react-router-dom'
 import moment from 'moment'
+import { AuthContext } from "../context/authContext";
 
 
 
@@ -18,6 +19,12 @@ const Write = () => {
   const [err, setError] = useState(null)
   // Get the navigate function from the react-router-dom library
   const navigate = useNavigate()
+
+  const { currentUser } = useContext(AuthContext); // get the current user from the auth context
+
+  if (!currentUser) { // if there is no current user, show an error message
+    return <div className='error'>Please login to create a post.</div>;
+}
 
   // Function to validate user inputs
   const validateInputs = () => {
