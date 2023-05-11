@@ -11,7 +11,6 @@ import DOMPurify from "dompurify";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
-import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import Comments from '../components/Comments.jsx';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { makeRequest } from "../axios";
@@ -133,14 +132,10 @@ const Single = () => {
             {data.length} Likes
           </div>
 
-          {/* Display a sms outline icon that toggles the comment section when clicked */}
+          {/* Display a message outline icon that toggles the comment section when clicked */}
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />
             See Comments
-          </div>
-          <div className="item">
-            <ShareOutlinedIcon />
-            Share
           </div>
         </div>
         {commentOpen && <Comments postId={post.id} />}

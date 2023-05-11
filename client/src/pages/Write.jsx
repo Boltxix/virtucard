@@ -105,16 +105,12 @@ const Write = () => {
           <span>
             <b>Status :</b> Draft
           </span>
-          <span>
-            <b>Visibility: </b> Public
-          </span>
+          
           {/* Input field for the image file */}
           <input style={{ display: "None" }} type="file" id="file" onChange={e => setFile(e.target.files[0])} />
           {/* Button to upload the image file */}
           <label className='file' htmlFor="file">Upload Image</label>
           <div className="buttons">
-            {/* Button to save the post as a draft !!!NOT IMPLEMENTED */}
-            <button>Save as a draft</button>
             {/* Button to publish the post */}
             <button onClick={handleClick}>Publish</button>
           </div>
