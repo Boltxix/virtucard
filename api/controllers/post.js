@@ -1,6 +1,8 @@
+//Import the database connection and JWT library
 import { db } from "../db.js"
 import jwt from "jsonwebtoken"
 
+//Retrive all posts from the database
 export const getPosts = (req, res) => {
     const q = req.query.cat
         ? "SELECT * FROM posts WHERE cat=? ORDER BY date DESC "
@@ -13,7 +15,7 @@ export const getPosts = (req, res) => {
     })
 }
 
-
+//Retrive a single post from the database
 export const getPost = (req, res) => {
     const q = "SELECT p.id, `username`,`title`,`desc`,p.img,u.img AS userImg,`cat`,`date` FROM users u JOIN posts p ON u.id=p.uid WHERE p.id = ?"
 
@@ -24,11 +26,12 @@ export const getPost = (req, res) => {
     })
 }
 
-
+//Add a new post to the database
 export const addPost = (req, res) => {
     const token = req.cookies.access_token
     if (!token) return res.status(401).json("Not authenticated!")
 
+    //Verify the user's aithentication token
     jwt.verify(token, "secretekey", (err, userInfo) => {
         if (err) return res.status(403).json("Token is not valid!")
 
@@ -43,6 +46,7 @@ export const addPost = (req, res) => {
             userInfo.id
         ]
 
+        //Insert the post data into the database
         db.query(q, [values], (err, data) => {
             if (err) return res.status(500).json(err)
 
@@ -51,17 +55,19 @@ export const addPost = (req, res) => {
     })
 }
 
-
+//Delete a post from the database
 export const deletePost = (req, res) => {
     const token = req.cookies.access_token
     if (!token) return res.status(401).json("Not authenticated!")
 
+    // Verify the user's authentication token
     jwt.verify(token, "secretekey", (err, userInfo) => {
         if (err) return res.status(403).json("Token is not valid!")
 
         const postId = req.params.id
         const q = "DELETE FROM posts WHERE `id` = ? AND `uid` = ?"
 
+        // Delete the post from the database if the user is the owner
         db.query(q, [postId, userInfo.id], (err, data) => {
             if (err) return res.status(403).json("You can delete only your post!")
 
@@ -70,11 +76,12 @@ export const deletePost = (req, res) => {
     })
 }
 
-
+// Update an existing post in the database
 export const updatePost = (req, res) => {
     const token = req.cookies.access_token
     if (!token) return res.status(401).json("Not authenticated!")
 
+    // Verify the user's authentication token
     jwt.verify(token, "secretekey", (err, userInfo) => {
         if (err) return res.status(403).json("Token is not valid!")
 
@@ -88,7 +95,8 @@ export const updatePost = (req, res) => {
             req.body.cat,
         ]
 
-        db.query(q, [...values,postId, userInfo.id], (err, data) => {
+        // Update the post in the database if the user is the owner
+        db.query(q, [...values, postId, userInfo.id], (err, data) => {
             if (err) return res.status(500).json(err)
 
             return res.json("Post has been updated !")

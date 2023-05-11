@@ -10,45 +10,45 @@ import { useNavigate } from "react-router-dom";
 
 
 const Profile = () => {
-    const [openUpdate, setOpenUpdate] = useState(false)
-    const [user, setUser] = useState({});
-    const { currentUser, logout } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const [openUpdate, setOpenUpdate] = useState(false) // state to control whether the update component is open or not
+    const [user, setUser] = useState({}); // state to store the user data
+    const { currentUser, logout } = useContext(AuthContext); // get the current user and logout function from the auth context
+    const navigate = useNavigate(); // hook to navigate to different routes
 
-    const userId = currentUser ? currentUser.id : null;
+    const userId = currentUser ? currentUser.id : null; // get the user id from the current user object
 
-    useEffect(() => {
+    useEffect(() => { // fetch user data when the component mounts or when the user id changes
         const fetchData = async () => {
             try {
-                const res = await axios.get(`/user/${userId}`);
-                setUser(res.data[0])
+                const res = await axios.get(`/user/${userId}`); // make a GET request to the server to get the user data
+                setUser(res.data[0]) // set the user state to the data returned from the server
             } catch (err) {
                 console.log(err)
             }
         }
-        if (userId) {
+        if (userId) { // only fetch data if the user id exists
             fetchData();
         }
     }, [userId])
 
-    const handleDelete = async () => {
+    const handleDelete = async () => { // function to handle deleting the user profile
 
         const confirmDelete = window.confirm("Are you sure you want to delete your profile? This action cannot be undone and all your posts and events will be deleted.");
-        if(confirmDelete){
+        if (confirmDelete) { // if the user confirms the deletion
             try {
-                await axios.delete(`/user/${userId}`)
-                logout()
-                navigate("/")
+                await axios.delete(`/user/${userId}`) // make a DELETE request to the server to delete the user profile
+                logout() // call the logout function from the auth context to log the user out
+                navigate("/") // navigate to the home page
             } catch (err) {
                 console.log(err)
             }
         }
     }
 
-    if (!currentUser) {
+    if (!currentUser) { // if there is no current user, show an error message
         return <div className='error'>Please login to view your profile.</div>;
-      }
-
+    }
+    //Render the profile page
     return (
         <div className='profile'>
             <div className="content">
@@ -64,6 +64,7 @@ const Profile = () => {
                     <button onClick={handleDelete}>Delete Profile</button>
                 </div>
             </div>
+            {/* Open the update component */}
             {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={user} />}
         </div>
     )

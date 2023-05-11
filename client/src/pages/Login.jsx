@@ -5,6 +5,7 @@ import { AuthContext } from '../context/authContext'
 
 const Login = () => {
 
+  // Define state variables for inputs and errors
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
@@ -12,40 +13,50 @@ const Login = () => {
   })
   const [errors, setError] = useState({})
 
+  // Get the navigate function from react-router-dom
   const navigate = useNavigate()
 
+  // Get the login function from the AuthContext
   const { login } = useContext(AuthContext)
 
+  // Handle changes to the input fields
   const handleChange = e => {
     setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }))
   }
-
+  // Handle form submission
   const handleSubmit = async e => {
     e.preventDefault()
+    // Validate the inputs
     const validationErrors = validate(inputs)
     if (Object.keys(validationErrors).length === 0) {
       try {
+        // Call the login function with the inputs
         await login(inputs)
+        // Navigate to the home page
         navigate("/")
       } catch (err) {
-        setError({ server: err.response.data})
+        // Set the error state if there is an error from the server
+        setError({ server: err.response.data })
       }
     } else {
+      // Set the error state if there are validation errors
       setError(validationErrors)
     }
   }
 
+  // Validate the input values
   const validate = (values) => {
     let errors = {}
-    if(!values.username){
+    if (!values.username) {
       errors.username = "Username is required"
     }
-    if(!values.password){
+    if (!values.password) {
       errors.password = "Password is required"
     }
     return errors
   }
 
+  // Render the login form
   return (
     <div className='auth'>
       <div className="card">

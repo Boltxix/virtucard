@@ -7,6 +7,7 @@ import defProfileImg from '../img/profile.png'
 
 
 const Update = ({ setOpenUpdate, user }) => {
+  // Define state variables for the form inputs, error messages, and file upload
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -15,6 +16,7 @@ const Update = ({ setOpenUpdate, user }) => {
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
 
+  // Helper function to create a URL for the uploaded image
   function urlImg(newImg) {
     if (!newImg) {
       return null;
@@ -24,9 +26,11 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   }
 
+  // Get the current user and setCurrentUser functions from the AuthContext
   const { currentUser } = useContext(AuthContext);
   const { setCurrentUser } = useContext(AuthContext)
 
+  // Validate the form inputs before submitting the update request
   const validateInputs = () => {
     let isValid = true;
 
@@ -51,6 +55,7 @@ const Update = ({ setOpenUpdate, user }) => {
   };
 
 
+  // Send a POST request to upload the new profile picture
   const upload = async () => {
     try {
       const formData = new FormData();
@@ -62,19 +67,22 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   }
 
-
+  // Handle the form submission by sending a PUT request to update the user's information
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate the form inputs before submitting the update request
     if (!validateInputs()) {
       return;
     }
 
+    // Check for spaces in the file name before uploading
     if (file && file.name && file.name.includes(" ")) {
       setMessage("File name should not contain spaces");
       return;
     }
 
+    // Upload the new profile picture if one was selected
     let imgUrl = "";
     if (file) {
       imgUrl = await upload();
@@ -83,7 +91,7 @@ const Update = ({ setOpenUpdate, user }) => {
         return;
       }
     }
-
+    // Send the PUT request to update the user's information
     try {
       const response = await axios.put(`/user/${currentUser.id}`, {
         username,
@@ -92,6 +100,7 @@ const Update = ({ setOpenUpdate, user }) => {
       });
 
       setMessage(response.data);
+      // Update the current user's information in the AuthContext
       setCurrentUser({
         ...user,
         username,
@@ -104,12 +113,14 @@ const Update = ({ setOpenUpdate, user }) => {
     }
   };
 
+  // Render the update form
   return (
     <div className='update'>
       <div className="wrapper">
         <h1>Update Your Profile</h1>
         <form onSubmit={handleSubmit}>
           <div className="files">
+            {/* Allow the user to select a new profile picture */}
             <label htmlFor="file">
               <span>Profile Picture</span>
               <div className="imgContainer">
@@ -127,6 +138,7 @@ const Update = ({ setOpenUpdate, user }) => {
               }}
             />
           </div>
+          {/* Allow the user to update their username */}
           <label>Username</label>
           <input
             type="text"
@@ -136,6 +148,7 @@ const Update = ({ setOpenUpdate, user }) => {
             onChange={(e) => setUsername(e.target.value)}
           />
           {usernameError && <p className="error">{usernameError}</p>}
+          {/* Allow the user to update their email */}
           <label>Email</label>
           <input
             type="email"
@@ -148,6 +161,7 @@ const Update = ({ setOpenUpdate, user }) => {
           <p>{message}</p>
           <button type='submit'>Update</button>
         </form>
+        {/* On click close the update component and reload the window  */}
         <button className='close' onClick={() => {
           setOpenUpdate(false);
           window.location.reload();

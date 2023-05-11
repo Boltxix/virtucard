@@ -9,7 +9,7 @@ const Footer = () => {
 
         <a href="https://github.com/Boltxix">Github</a>
         <a href="https://www.linkedin.com/in/maciej-sobiecki-3a3402176/">LinkedIn</a>
-        </div>
+      </div>
       <p>&copy; 2023 VirtuCard. All Rights Reserved.</p>
       <span>Made with <b>React.js</b></span>
     </footer>
