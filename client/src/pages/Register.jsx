@@ -47,8 +47,11 @@ const Register = () => {
   // Defining validate function to validate form inputs
   const validate = (values) => {
     let errors = {}
+    const usernameRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/
     if (!values.username) {
       errors.username = "Username is required"
+    } else if (!usernameRegex.test(values.username)) {
+      errors.username = "Username can only contain letters, numbers, and symbols"
     }
     if (!values.email) {
       errors.email = "Email is required"

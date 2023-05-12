@@ -33,11 +33,15 @@ const Update = ({ setOpenUpdate, user }) => {
   // Validate the form inputs before submitting the update request
   const validateInputs = () => {
     let isValid = true;
+    const usernameRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/
 
     if (!username) {
       setUsernameError("Username is required");
       isValid = false;
+    } else if (!usernameRegex.test(username)) {
+      setUsernameError("Username can only contain letters, numbers, and symbols")
     } else {
+
       setUsernameError("");
     }
 
@@ -144,17 +148,15 @@ const Update = ({ setOpenUpdate, user }) => {
             type="text"
             placeholder={currentUser.username}
             name="username"
-            required
             onChange={(e) => setUsername(e.target.value)}
           />
           {usernameError && <p className="error">{usernameError}</p>}
           {/* Allow the user to update their email */}
           <label>Email</label>
           <input
-            type="email"
+            type="text"
             placeholder={currentUser.email}
             name="email"
-            required
             onChange={(e) => setEmail(e.target.value)}
           />
           {emailError && <p className="error">{emailError}</p>}
