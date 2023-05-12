@@ -47,11 +47,16 @@ const Login = () => {
   // Validate the input values
   const validate = (values) => {
     let errors = {}
+    const usernameRegex = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/
     if (!values.username) {
       errors.username = "Username is required"
+    } else if (!usernameRegex.test(values.username)) {
+      errors.username = "Username can only contain letters, numbers, and symbols"
     }
     if (!values.password) {
       errors.password = "Password is required"
+    } else if (values.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long"
     }
     return errors
   }
