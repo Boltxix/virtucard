@@ -104,5 +104,4 @@ app.use("/api/likes", likesRoutes)
 
 // Start the server and listen on port 8800
 app.listen(8800, () => {
-    console.log("Connected!")
 })
